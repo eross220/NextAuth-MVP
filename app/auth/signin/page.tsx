@@ -17,13 +17,14 @@ export default function AuthPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const name = "test";
     if (isSignUp) {
       if (password !== confirmPassword) {
         setError("Passwords do not match");
         return;
       }
       try {
-        const res = await fetch("/api/users", {
+        const res = await fetch("http://localhost:8000/v1/auth/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
@@ -43,14 +44,16 @@ export default function AuthPage() {
           email,
           password,
           redirect: false,
+          callbackUrl: "/dashboard",
         });
         if (result?.error) {
-          setError("Invalid credentials");
+          console.log("Error", result.error);
+          setError(result.error);
         } else {
           router.push("/dashboard");
         }
       } catch (error) {
-        setError("Something went wrong");
+        console.log("api error", error);
       }
     }
   };
@@ -123,7 +126,12 @@ export default function AuthPage() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+                onClick={() =>
+                  signIn("google", {
+                    callbackUrl: "/dashboard",
+                    redirect: true,
+                  })
+                }
               >
                 <Mail className="mr-2 h-4 w-4" />
                 Google
@@ -131,7 +139,12 @@ export default function AuthPage() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => signIn("github", { callbackUrl: "/dashboard" })}
+                onClick={() =>
+                  signIn("github", {
+                    callbackUrl: "/dashboard",
+                    redirect: true,
+                  })
+                }
               >
                 <Github className="mr-2 h-4 w-4" />
                 GitHub

@@ -15,6 +15,7 @@ import { Moon, Sun, User } from "lucide-react";
 export function Navbar() {
   const { setTheme } = useTheme();
   const { data: session } = useSession();
+  console.log("session", session);
 
   return (
     <nav className="border-b w-full fixed">
